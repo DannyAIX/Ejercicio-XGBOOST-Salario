@@ -1,112 +1,400 @@
-# Data Science Project Boilerplate
+# Predicción de Salarios con XGBoost
 
-This boilerplate is designed to kickstart data science projects by providing a basic setup for database connections, data processing, and machine learning model development. It includes a structured folder organization for your datasets and a set of pre-defined Python packages necessary for most data science tasks.
+Proyecto de Machine Learning enfocado en la predicción de salarios utilizando el algoritmo de Gradient Boosting XGBoost, optimizado para obtener predicciones precisas basadas en características demográficas y profesionales.
 
-## Structure
+## 📋 Descripción
 
-The project is organized as follows:
+Este proyecto implementa un modelo de XGBoost (Extreme Gradient Boosting) para predecir niveles de ingresos basándose en variables como educación, experiencia laboral, ocupación, edad, y otras características relevantes. El objetivo es proporcionar estimaciones precisas que puedan ser útiles para análisis de compensación, planificación de recursos humanos, y estudios socioeconómicos.
 
-- **`src/app.py`** → Main Python script where your project will run.
-- **`src/explore.ipynb`** → Notebook for exploration and testing. Once exploration is complete, migrate the clean code to `app.py`.
-- **`src/utils.py`** → Auxiliary functions, such as database connection.
-- **`requirements.txt`** → List of required Python packages.
-- **`models/`** → Will contain your SQLAlchemy model classes.
-- **`data/`** → Stores datasets at different stages:
-  - **`data/raw/`** → Raw data.
-  - **`data/interim/`** → Temporarily transformed data.
-  - **`data/processed/`** → Data ready for analysis.
+## 🎯 Objetivos del Proyecto
 
+- Predecir rangos salariales con alta precisión
+- Identificar las variables más importantes que influyen en el salario
+- Implementar técnicas avanzadas de feature engineering
+- Optimizar hiperparámetros para maximizar el rendimiento
+- Proporcionar un modelo interpretable y escalable
 
-## ⚡ Initial Setup in Codespaces (Recommended)
+## 🚀 Características
 
-No manual setup is required, as **Codespaces is automatically configured** with the predefined files created by the academy for you. Just follow these steps:
+- **Modelo XGBoost Optimizado**: Implementación del algoritmo de gradient boosting más eficiente
+- **Feature Engineering**: Creación y transformación de variables predictivas
+- **Encoding Inteligente**: Manejo de variables categóricas mediante Label Encoding
+- **Validación Robusta**: Evaluación mediante cross-validation y métricas múltiples
+- **Análisis de Importancia**: Identificación de features más relevantes
+- **Modelo Serializado**: Modelos guardados listos para producción (`xgb_income_model.pkl`, `label_encoder.pkl`)
 
-1. **Wait for the environment to configure automatically**.
-   - All necessary packages and the database will install themselves.
-   - The automatically created `username` and `db_name` are in the **`.env`** file at the root of the project.
-2. **Once Codespaces is ready, you can start working immediately**.
+## 📁 Estructura del Proyecto
 
+```
+Ejercicio-XGBOOST-Salario/
+│
+├── src/
+│   ├── app.py              # Script principal del proyecto
+│   ├── explore.ipynb       # Notebook de exploración y experimentación
+│   └── utils.py            # Funciones auxiliares
+│
+├── data/
+│   ├── raw/                # Datos originales sin procesar
+│   ├── interim/            # Datos en transformación
+│   └── processed/          # Datos preprocesados para el modelo
+│
+├── models/                 # Directorio para modelos adicionales
+│
+├── xgb_income_model.pkl    # Modelo XGBoost entrenado
+├── label_encoder.pkl       # Encoder para variables categóricas
+│
+├── .devcontainer/          # Configuración de desarrollo
+├── .vscode/                # Configuración de VS Code
+├── requirements.txt        # Dependencias del proyecto
+└── README.md              # Este archivo
+```
 
-## 💻 Local Setup (Only if you can't use Codespaces)
+## 🔧 Instalación
 
-**Prerequisites**
+### Opción 1: GitHub Codespaces (Recomendado)
 
-Make sure you have Python 3.11+ installed on your machine. You will also need pip to install the Python packages.
+1. Abre el repositorio en GitHub Codespaces
+2. El entorno se configurará automáticamente
+3. Todas las dependencias se instalarán automáticamente
+4. ¡Listo para usar!
 
-**Installation**
+### Opción 2: Instalación Local
 
-Clone the project repository to your local machine.
+**Requisitos Previos**
+- Python 3.11 o superior
+- pip (gestor de paquetes de Python)
+- Git
 
-Navigate to the project directory and install the required Python packages:
+**Pasos de Instalación**
 
+1. Clona el repositorio:
+```bash
+git clone https://github.com/DannyAIX/Ejercicio-XGBOOST-Salario.git
+cd Ejercicio-XGBOOST-Salario
+```
+
+2. Crea un entorno virtual (recomendado):
+```bash
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+```
+
+3. Instala las dependencias:
 ```bash
 pip install -r requirements.txt
 ```
 
-**Create a database (if necessary)**
-
-Create a new database within the Postgres engine by customizing and executing the following command:
-
+4. Configura variables de entorno (si es necesario):
 ```bash
-$ psql -U postgres -c "DO \$\$ BEGIN 
-    CREATE USER my_user WITH PASSWORD 'my_password'; 
-    CREATE DATABASE my_database OWNER my_user; 
-END \$\$;"
-```
-Connect to the Postgres engine to use your database, manipulate tables, and data:
-
-```bash
-$ psql -U my_user -d my_database
+cp .env.example .env
+# Edita .env según necesites
 ```
 
-Once inside PSQL, you can create tables, run queries, insert, update, or delete data, and much more!
+## 💻 Uso
 
-**Environment Variables**
-
-Create a .env file in the root directory of the project to store your environment variables, such as your database connection string:
-
-```makefile
-DATABASE_URL="postgresql://<USER>:<PASSWORD>@<HOST>:<PORT>/<DB_NAME>"
-
-#example
-DATABASE_URL="postgresql://my_user:my_password@localhost:5432/my_database"
-```
-
-## Running the Application
-
-To run the application, execute the app.py script from the root directory of the project:
+### Ejecutar el Modelo
 
 ```bash
 python src/app.py
 ```
 
-## Adding Models
+### Exploración y Experimentación
 
-To add SQLAlchemy model classes, create new Python script files within the models/ directory. These classes should be defined according to your database schema.
+Para análisis exploratorio y pruebas:
 
-Example model definition (`models/example_model.py`):
-
-```py
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
-
-Base = declarative_base()
-
-class ExampleModel(Base):
-    __tablename__ = 'example_table'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(unique=True)
+```bash
+jupyter notebook src/explore.ipynb
 ```
 
-## Working with Data
+### Flujo de Trabajo Típico
 
-You can place your raw datasets in the data/raw directory, intermediate datasets in data/interim, and processed datasets ready for analysis in data/processed.
+1. **Carga de Datos**
+   - Coloca tus datos en `data/raw/`
+   - Formato recomendado: CSV con variables demográficas y salariales
 
-To process data, you can modify the app.py script to include your data processing steps, using pandas for data manipulation and analysis.
+2. **Preprocesamiento**
+   - Limpieza de datos
+   - Manejo de valores faltantes
+   - Encoding de variables categóricas
+   - Feature engineering
 
-## Contributors
+3. **Entrenamiento**
+   - Configuración de hiperparámetros de XGBoost
+   - Entrenamiento con validación cruzada
+   - Optimización mediante GridSearch o RandomSearch
 
-This template was built as part of the [Data Science and Machine Learning Bootcamp](https://4geeksacademy.com/us/coding-bootcamps/datascience-machine-learning) by 4Geeks Academy by [Alejandro Sanchez](https://twitter.com/alesanchezr) and many other contributors. Learn more about [4Geeks Academy BootCamp programs](https://4geeksacademy.com/us/programs) here.
+4. **Evaluación**
+   - Métricas de clasificación (Accuracy, Precision, Recall, F1)
+   - Análisis de importancia de features
+   - Matriz de confusión
 
-Other templates and resources like this can be found on the school's GitHub page.
+5. **Predicción**
+   - Cargar modelos pre-entrenados
+   - Realizar predicciones en nuevos datos
+
+## 📊 Uso del Modelo Pre-entrenado
+
+```python
+import pickle
+import pandas as pd
+import numpy as np
+
+# Cargar el modelo entrenado
+with open('xgb_income_model.pkl', 'rb') as f:
+    model = pickle.load(f)
+
+# Cargar el label encoder
+with open('label_encoder.pkl', 'rb') as f:
+    label_encoder = pickle.load(f)
+
+# Preparar datos de ejemplo
+new_data = pd.DataFrame({
+    'age': [35],
+    'education_num': [13],
+    'hours_per_week': [40],
+    'occupation_encoded': [5],
+    # ... otras features necesarias
+})
+
+# Realizar predicción
+prediction = model.predict(new_data)
+prediction_label = label_encoder.inverse_transform(prediction)
+
+print(f'Predicción de nivel de ingresos: {prediction_label[0]}')
+```
+
+## 🤖 Sobre XGBoost
+
+XGBoost (Extreme Gradient Boosting) es un algoritmo de machine learning basado en árboles de decisión que utiliza gradient boosting. Es especialmente efectivo para problemas de clasificación y regresión.
+
+### Ventajas de XGBoost
+
+- **Alto Rendimiento**: Uno de los algoritmos más precisos disponibles
+- **Velocidad**: Optimizado para ser extremadamente rápido
+- **Regularización**: Previene el overfitting mediante L1 y L2 regularization
+- **Paralelización**: Aprovecha múltiples núcleos del procesador
+- **Manejo de Valores Faltantes**: Puede trabajar con datos incompletos
+- **Feature Importance**: Identifica automáticamente las variables más importantes
+
+### Hiperparámetros Clave
+
+```python
+from xgboost import XGBClassifier
+
+model = XGBClassifier(
+    max_depth=6,              # Profundidad máxima de los árboles
+    learning_rate=0.1,        # Tasa de aprendizaje (eta)
+    n_estimators=100,         # Número de árboles
+    subsample=0.8,            # Fracción de muestras para entrenar cada árbol
+    colsample_bytree=0.8,     # Fracción de features por árbol
+    gamma=0,                  # Reducción de pérdida mínima para split
+    reg_alpha=0,              # Regularización L1
+    reg_lambda=1,             # Regularización L2
+    random_state=42
+)
+```
+
+## 📈 Ejemplo Completo de Entrenamiento
+
+```python
+import pandas as pd
+import numpy as np
+from xgboost import XGBClassifier
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+import pickle
+
+# Cargar datos
+df = pd.read_csv('data/raw/salary_data.csv')
+
+# Preprocesamiento
+# Separar features y target
+X = df.drop('income', axis=1)
+y = df['income']
+
+# Encoding de variables categóricas
+label_encoders = {}
+categorical_cols = X.select_dtypes(include=['object']).columns
+
+for col in categorical_cols:
+    le = LabelEncoder()
+    X[col] = le.fit_transform(X[col].astype(str))
+    label_encoders[col] = le
+
+# Encoding del target
+target_encoder = LabelEncoder()
+y_encoded = target_encoder.fit_transform(y)
+
+# Split train/test
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded
+)
+
+# Entrenar modelo
+model = XGBClassifier(
+    max_depth=6,
+    learning_rate=0.1,
+    n_estimators=100,
+    objective='binary:logistic',
+    random_state=42
+)
+
+model.fit(X_train, y_train)
+
+# Evaluar
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy:.4f}')
+
+# Reporte de clasificación
+print(classification_report(y_test, y_pred, 
+                          target_names=target_encoder.classes_))
+
+# Importancia de features
+feature_importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': model.feature_importances_
+}).sort_values('importance', ascending=False)
+
+print('\nTop 10 Features más importantes:')
+print(feature_importance.head(10))
+
+# Guardar modelo
+with open('xgb_income_model.pkl', 'wb') as f:
+    pickle.dump(model, f)
+
+with open('label_encoder.pkl', 'wb') as f:
+    pickle.dump(target_encoder, f)
+
+print('\n¡Modelo guardado exitosamente!')
+```
+
+## 📊 Métricas de Evaluación
+
+El proyecto utiliza las siguientes métricas:
+
+- **Accuracy**: Proporción de predicciones correctas
+- **Precision**: Precisión en predicciones positivas
+- **Recall**: Capacidad de encontrar todos los casos positivos
+- **F1-Score**: Media armónica entre Precision y Recall
+- **ROC-AUC**: Área bajo la curva ROC
+- **Matriz de Confusión**: Visualización de predicciones correctas e incorrectas
+
+## 🛠️ Tecnologías Utilizadas
+
+### Core
+- **Python 3.11+**
+- **XGBoost**: Algoritmo principal de ML
+- **pandas**: Manipulación de datos
+- **numpy**: Operaciones numéricas
+
+### Machine Learning
+- **scikit-learn**: Preprocesamiento y evaluación
+- **matplotlib/seaborn**: Visualizaciones
+
+### Utilidades
+- **pickle**: Serialización de modelos
+- **jupyter**: Notebooks interactivos
+
+## 🎯 Variables Típicas del Modelo
+
+El modelo puede trabajar con variables como:
+
+- **Demográficas**: Edad, género, estado civil
+- **Educación**: Nivel educativo, años de estudio
+- **Laborales**: Ocupación, sector, horas trabajadas
+- **Experiencia**: Años de experiencia
+- **Ubicación**: País, región, área metropolitana
+- **Otras**: Capital gain, capital loss, etc.
+
+## 🔍 Optimización de Hiperparámetros
+
+```python
+from sklearn.model_selection import GridSearchCV
+
+# Definir grid de parámetros
+param_grid = {
+    'max_depth': [3, 5, 7],
+    'learning_rate': [0.01, 0.1, 0.3],
+    'n_estimators': [50, 100, 200],
+    'subsample': [0.6, 0.8, 1.0],
+    'colsample_bytree': [0.6, 0.8, 1.0]
+}
+
+# Grid Search
+grid_search = GridSearchCV(
+    estimator=XGBClassifier(random_state=42),
+    param_grid=param_grid,
+    cv=5,
+    scoring='accuracy',
+    n_jobs=-1,
+    verbose=2
+)
+
+grid_search.fit(X_train, y_train)
+
+print(f'Mejores parámetros: {grid_search.best_params_}')
+print(f'Mejor score: {grid_search.best_score_:.4f}')
+
+# Usar mejor modelo
+best_model = grid_search.best_estimator_
+```
+
+## 📈 Casos de Uso
+
+- **Recursos Humanos**: Planificación de compensaciones y beneficios
+- **Reclutamiento**: Establecimiento de rangos salariales competitivos
+- **Análisis Económico**: Estudios de desigualdad salarial
+- **Consultoría**: Asesoramiento en estructuras de compensación
+- **Investigación**: Análisis de factores que influyen en ingresos
+
+## 🔍 Próximos Pasos
+
+- [ ] Implementar SHAP values para explicabilidad del modelo
+- [ ] Agregar más features derivadas (feature engineering avanzado)
+- [ ] Comparar con otros algoritmos (LightGBM, CatBoost)
+- [ ] Implementar API REST para predicciones en tiempo real
+- [ ] Crear dashboard interactivo con Streamlit
+- [ ] Implementar reentrenamiento automático del modelo
+- [ ] Agregar detección de drift en los datos
+
+## 🤝 Contribuciones
+
+Las contribuciones son bienvenidas. Para cambios importantes:
+
+1. Fork del proyecto
+2. Crea una rama feature (`git checkout -b feature/MejoraPredictiva`)
+3. Commit tus cambios (`git commit -m 'Add: mejora en accuracy'`)
+4. Push a la rama (`git push origin feature/MejoraPredictiva`)
+5. Abre un Pull Request
+
+## 📚 Referencias
+
+- [XGBoost Documentation](https://xgboost.readthedocs.io/)
+- [XGBoost Paper](https://arxiv.org/abs/1603.02754)
+- [Scikit-learn Documentation](https://scikit-learn.org/)
+- [Feature Engineering Techniques](https://www.kaggle.com/learn/feature-engineering)
+
+## 📄 Licencia
+
+Este proyecto está basado en el template de [4Geeks Academy](https://4geeksacademy.com) para el bootcamp de Data Science y Machine Learning.
+
+## 👤 Autor
+
+**DannyAIX**
+
+- GitHub: [@DannyAIX](https://github.com/DannyAIX)
+- Proyecto: [Ejercicio-XGBOOST-Salario](https://github.com/DannyAIX/Ejercicio-XGBOOST-Salario)
+
+## 🙏 Agradecimientos
+
+- [4Geeks Academy](https://4geeksacademy.com) por el template base y formación
+- Comunidad de XGBoost y scikit-learn
+- Desarrolladores del ecosistema de Data Science en Python
+
+---
+
+⭐️ Si este proyecto te resultó útil, considera darle una estrella en GitHub
+
+💼 **¿Necesitas predecir salarios?** Este modelo está listo para ser integrado en sistemas de RRHH y análisis de compensación.
